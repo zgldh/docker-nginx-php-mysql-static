@@ -67,6 +67,10 @@ COPY nginx/nginx.conf /root/nginx/nginx.conf
 COPY nginx/logrotate /etc/logrotate.d/nginx
 
 ##################################################################
+# China composer mirror
+RUN composer config -g repo.packagist composer https://packagist.laravel-china.org
+
+##################################################################
 # ports
 EXPOSE 3306
 EXPOSE 80
