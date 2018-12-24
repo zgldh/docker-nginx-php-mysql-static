@@ -16,6 +16,7 @@ RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get -y install apt-utils supervisor nginx php7.0-fpm php7.0-mysql pwgen python-setuptools curl git unzip cron anacron rsyslog memcached mysql-server mysql-client && \
     apt-get -y install php7.0-curl php7.0-gd php7.0-intl php-pear php-imagick php7.0-imap php7.0-mcrypt php-memcache php7.0-ps php7.0-pspell php7.0-recode php7.0-sqlite php7.0-tidy php7.0-xmlrpc php7.0-xsl && \
+    apt-get -y install composer php-mbstring && \
     apt-get clean && \
     rm -rf /var/lib/mysql && \
     rm -rf /var/lib/apt/lists/* && \
@@ -35,6 +36,7 @@ RUN apt-get update && \
     sed -i 's/worker_processes auto;/worker_processes 2;/g' /etc/nginx/nginx.conf && \
     sed -i -e "s/keepalive_timeout\s*65/keepalive_timeout 2/" /etc/nginx/nginx.conf && \
     sed -i -e "s/keepalive_timeout 2/keepalive_timeout 2;\n\tclient_max_body_size 100m/" /etc/nginx/nginx.conf && \
+    sed -i 's!root /var/www/html!root /app/public!g' /etc/nginx/sites-available/default && \
 
     # modify mysql
     sed -e "s/^bind-address\(.*\)=.*/bind-address = 0.0.0.0/" -i /etc/mysql/mysql.conf.d/mysqld.cnf && \
