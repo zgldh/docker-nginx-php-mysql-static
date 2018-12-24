@@ -16,13 +16,13 @@ RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get -y install apt-utils supervisor nginx php7.0-fpm php7.0-mysql pwgen python-setuptools curl git unzip cron anacron rsyslog memcached mysql-server mysql-client && \
     apt-get -y install php7.0-curl php7.0-gd php7.0-intl php-pear php-imagick php7.0-imap php7.0-mcrypt php-memcache php7.0-ps php7.0-pspell php7.0-recode php7.0-sqlite php7.0-tidy php7.0-xmlrpc php7.0-xsl && \
-    apt-get -y install composer php-mbstring && \
+    apt-get -y install php-mbstring && \
     apt-get clean && \
     rm -rf /var/lib/mysql && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/* && \
     rm -f /etc/memcached.conf && \
-    rm -rf /var/www && \
+    rm -rf /var/www && \    
 
     # fix container bug for syslog, by disabling: emerg and imklog
     sed -i 's/\$KLogPermitNonKernelFacility/#$KLogPermitNonKernelFacility/g' /etc/rsyslog.conf && \
@@ -53,6 +53,13 @@ RUN apt-get update && \
     sed -i -e "s/;catch_workers_output\s*=\s*yes/catch_workers_output = yes/g" /etc/php/7.0/fpm/pool.d/www.conf && \
     find /etc/php/7.0/cli/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
 
+##################################################################
+# Composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php -r "if (hash_file('sha384', 'composer-setup.php') === '93b54496392c062774670ac18b134c3b3a95e5a5e5c8f1a9f115f203b75bf9a129d5daa8ba6a13e2cc8a1da0806388a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
+    php composer-setup.php && \
+    php -r "unlink('composer-setup.php');" \;
+RUN composer config -g repo.packagist composer https://packagist.laravel-china.org
 
 ##################################################################
 # copy files
@@ -65,10 +72,6 @@ COPY nginx/site-git.conf /root/nginx/site-git.conf
 COPY nginx/phpinfo.php /root/nginx/phpinfo.php
 COPY nginx/nginx.conf /root/nginx/nginx.conf
 COPY nginx/logrotate /etc/logrotate.d/nginx
-
-##################################################################
-# China composer mirror
-RUN composer config -g repo.packagist composer https://packagist.laravel-china.org
 
 ##################################################################
 # ports
