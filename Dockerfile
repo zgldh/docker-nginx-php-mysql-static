@@ -68,6 +68,7 @@ COPY nginx/logrotate /etc/logrotate.d/nginx
 ##################################################################
 # Composer
 RUN curl https://getcomposer.org/composer.phar > /usr/local/bin/composer
+RUN chmod +x /usr/local/bin/composer
 RUN composer config -g repo.packagist composer https://packagist.laravel-china.org
 
 ##################################################################
