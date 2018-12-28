@@ -68,6 +68,7 @@ COPY nginx/logrotate /etc/logrotate.d/nginx
 ##################################################################
 # Composer
 RUN curl https://getcomposer.org/composer.phar > /usr/local/bin/composer
+RUN mkdir /var/run/dbus/.composer -r
 RUN touch /var/run/dbus/.composer/config.json
 RUN chmod +x /usr/local/bin/composer
 RUN chmod 666 /var/run/dbus/.composer/config.json
