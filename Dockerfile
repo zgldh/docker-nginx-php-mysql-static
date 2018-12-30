@@ -71,7 +71,7 @@ RUN curl https://getcomposer.org/composer.phar > /usr/local/bin/composer
 RUN mkdir -p /var/run/dbus/.composer && \
     chmod +w /var/run/dbus/.composer -r && \
     scripts/composer-config.json /var/run/dbus/.composer/config.json && \
-    chmod +x /usr/local/bin/composer
+    chmod +x /usr/local/bin/composer \;
 
 ##################################################################
 # ports
